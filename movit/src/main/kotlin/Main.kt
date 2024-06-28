@@ -3,6 +3,7 @@ package org.alexiscrack3
 import org.apache.beam.runners.direct.DirectRunner
 import org.apache.beam.sdk.Pipeline
 import org.apache.beam.sdk.coders.StringUtf8Coder
+import org.apache.beam.sdk.io.Read
 import org.apache.beam.sdk.io.TextIO
 import org.apache.beam.sdk.options.PipelineOptionsFactory
 import org.apache.beam.sdk.transforms.Create
@@ -31,11 +32,12 @@ fun main() {
     options.runner = DirectRunner::class.java
     val p = Pipeline.create(options)
 
-    val input: PCollection<String> = p.apply(Create.of(LINES)).setCoder(StringUtf8Coder.of())
+    val input: PCollection<String> = p.apply(TextIO.read().from("input.txt"))
+//    val input: PCollection<String> = p.apply(Create.of(LINES)).setCoder(StringUtf8Coder.of())
 
     val transformation: ParDo.SingleOutput<String, String> = ParDo.of(LineFormatter())
-    val output = input.apply(transformation)
-    output.apply("WriteToText", TextIO.write().to("myfile").withSuffix(".txt"));
+    val output: PCollection<String> = input.apply(transformation)
+    output.apply("WriteToText", TextIO.write().to("build/myfile").withSuffix(".txt"));
 
 
     p.run()
