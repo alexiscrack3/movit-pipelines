@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation("org.apache.beam:beam-sdks-java-core:2.45.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.apache.beam:beam-runners-direct-java:2.45.0")
 
     testImplementation(kotlin("test"))
